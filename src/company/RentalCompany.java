@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import car.Car;
 import car.CarFactory;
 import driver.DriverLicence;
-import driver.DriverLicenceFactory;
+import driver.DriverLicence;
 
 public class RentalCompany {
 	// <key, value> matches registration number of cars and driver' licence
@@ -84,7 +84,7 @@ public class RentalCompany {
 		driverLicence.issue();
 		rentedList.put(car, driverLicence);
 		CarFactory.issue(car);
-		DriverLicenceFactory.issue(driverLicence);
+		DriverLicence.issue(driverLicence);
 
 		return true;
 	}
@@ -108,7 +108,7 @@ public class RentalCompany {
 		driverLicence.terminateRental();
 		rentedList.put(car, driverLicence);
 		CarFactory.terminateRental(car);
-		DriverLicenceFactory.terminateRental(driverLicence);
+		DriverLicence.terminateRental(driverLicence);
 
 		return car.capacity() - car.fuel();
 	}
