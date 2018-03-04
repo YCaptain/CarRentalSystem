@@ -36,8 +36,15 @@ public abstract class CarFactory implements Car {
 		this.isRented = false;
 	}
 
+	CarFactory(RegistrationNumber regisNum, int capacity, int fuel, boolean isRented) {
+		this.regisNum = RegistrationNumber.valueOf(regisNum.toString());
+		this.capacity = capacity;
+		this.fuel = fuel;
+		this.isRented = isRented;
+	}
+
 	/**
-	 * Return a car of the specified type with the specified registration number.
+	 * Returns a car of the specified type with the specified registration number.
 	 *
 	 * @param carType
 	 *            the type of car to return
@@ -128,15 +135,28 @@ public abstract class CarFactory implements Car {
 
 	@Override
 	public String toString() {
-		return regisNum + "-" + capacity;
+		return regisNum + "-" + capacity + "-" + fuel + "-" + isRented;
 	}
 
+	/**
+	 * Constructs an instance of Car from its string representation.
+	 *
+	 * @param str
+	 *            string representation of car
+	 * @return an instance of Car from its string representation.
+	 * @throws NullPointerException
+	 *             if <code>str</code> is null
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             if there are not two component parts to <code>str</code>
+	 */
 	public static Car valueOf(String str) {
 		String[] parts = str.split("-");
-		if (parts[1].equals(SMALL_CAR))
-			return new SmallCar(RegistrationNumber.valueOf(parts[0]));
-		else if (parts[1].equals(LARGE_CAR))
-			return new LargeCar(RegistrationNumber.valueOf(parts[0]));
+		if (SmallCar.CAP == Integer.parseInt(parts[1]))
+			return new SmallCar(RegistrationNumber.valueOf(parts[0]), Integer.parseInt(parts[2]),
+					Boolean.parseBoolean(parts[3]));
+		else if (LargeCar.CAP == Integer.parseInt(parts[1]))
+			return new LargeCar(RegistrationNumber.valueOf(parts[0]), Integer.parseInt(parts[2]),
+					Boolean.parseBoolean(parts[3]));
 		else
 			throw new IllegalArgumentException("invalid string representation of car: " + str);
 	}
@@ -146,14 +166,22 @@ public abstract class CarFactory implements Car {
 		this.fuel = fuel;
 	}
 
+	/**
+	 * @see car.Car#issue()
+	 */
 	@Override
 	public boolean issue() {
 		if (isRented)
 			return false;
-		isRented = !isRented;
+		isRented = true;
 		return true;
 	}
 
+	/**
+	 * Returns whether issue operation is success or not.
+	 *
+	 * @return whether issue operation is success or not.
+	 */
 	public static boolean issue(Car car) {
 		final Iterator<Car> cIter = cars.values().iterator();
 		while (cIter.hasNext()) {
@@ -167,20 +195,44 @@ public abstract class CarFactory implements Car {
 		return false;
 	}
 
+	/**
+	 * @see car.Car#terminateRental()
+	 */
 	@Override
 	public boolean terminateRental() {
 		if (!isRented)
 			return false;
-		isRented = !isRented;
+		isRented = false;
 		return true;
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Car))
+			return false;
+
+		final CarFactory cf = (CarFactory) obj;
+
+		return cf.capacity == capacity && cf.regisNum.equals(regisNum);
+	}
+
+	/**
+	 * Returns whether issue operation is success or not.
+	 *
+	 * @return whether issue operation is success or not.
+	 */
 	public static boolean terminateRental(Car car) {
 		final Iterator<Car> cIter = cars.values().iterator();
 		while (cIter.hasNext()) {
 			final Car c = cIter.next();
 			if (c.regisNum().equals(car.regisNum())) {
-				c.issue();
+				c.terminateRental();
 				cars.put(c.regisNum().toString(), c);
 				return true;
 			}
@@ -226,6 +278,13 @@ public abstract class CarFactory implements Car {
 		return count;
 	}
 
+	/**
+	 * Returns a available car by given car type.
+	 *
+	 * @param carType
+	 *            car type.
+	 * @return a available car by given car type.
+	 */
 	public static Car getCarByType(String carType) {
 		boolean small;
 		if (carType.equals(SMALL_CAR)) {
@@ -252,5 +311,13 @@ public abstract class CarFactory implements Car {
 			}
 		}
 		return null;
+	}
+
+	void update(Car car) {
+		cars.put(car.regisNum().toString(), car);
+	}
+
+	public static void clear() {
+		cars.clear();
 	}
 }

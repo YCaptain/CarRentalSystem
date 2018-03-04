@@ -22,11 +22,11 @@ public class DriverLicence{
 	DriverLicence(Name name, Date dateOfBirth, LicenceNumber licenceNumber, Date dateOfIssue, boolean isRented) {
 		if (name == null)
 			throw new IllegalArgumentException("name is null");
-		if (dateOfBirth == null)
+		else if (dateOfBirth == null)
 			throw new IllegalArgumentException("date of birth is null");
-		if (licenceNumber == null)
+		else if (licenceNumber == null)
 			throw new IllegalArgumentException("licence number is null");
-		if (dateOfIssue == null)
+		else if (dateOfIssue == null)
 			throw new IllegalArgumentException("date of issue is null");
 		this.name = Name.valueOf(name.toString());
 		this.dateOfBirth = new Date(dateOfBirth.getTime());
@@ -35,6 +35,17 @@ public class DriverLicence{
 		this.isRented = isRented;
 	}
 
+	/**
+	 * Returns a driver licence by given information.
+	 * @param name the name of the driver
+	 * @param dateOfBirth the date of birth of the driver
+	 * @param licenceNumber the licence number
+	 * @param dateOfIssue the date of issue of the licence
+	 * @param isRented whether the driver has rented a car
+	 * @return a driver licence by given information.
+	 * @throws NullPointerException if name, dateOfBirth or other parameters is null
+	 * @throws IllegalArgumentException if name, dateOfBirth or other parameters is invalid
+	 */
 	public static DriverLicence getInstance(Name name, Date dateOfBirth, LicenceNumber licenceNumber, Date dateOfIssue,
 			boolean isRented) {
 		// enforce single instance per licenceNumber
@@ -53,6 +64,11 @@ public class DriverLicence{
 		return valueOf(dl.toString());
 	}
 
+	/**
+	 * Returns a driver licence by licence number.
+	 * @param licenceNumber the licence number of the licence
+	 * @return a driver licence by licence number.
+	 */
 	public static DriverLicence getInstance(LicenceNumber licenceNumber) {
 		final String ln = licenceNumber.toString();
 		DriverLicence dl = licences.get(ln);
@@ -101,23 +117,35 @@ public class DriverLicence{
 	/**
 	 * Returns whether the licence is a full driving licence or not.
 	 *
-	 * @return
+	 * @return whether the licence is a full driving licence or not.
 	 */
 	public boolean isRented() {
 		return isRented;
 	}
 
+	/**
+	 * Returns whether issue operation is success or not.
+	 *
+	 * @return whether issue operation is success or not.
+	 */
 	public boolean issue() {
 		if (isRented)
 			return false;
-		isRented = !isRented;
+		isRented = true;
 		return true;
 	}
 
+	/**
+	 * Returns whether issue operation is success or not.
+	 *
+	 * @return whether issue operation is success or not.
+	 */
 	public static boolean issue(DriverLicence driverLicence) {
 		final Iterator<DriverLicence> licIter = licences.values().iterator();
 		while (licIter.hasNext()) {
 			DriverLicence dl = licIter.next();
+			if (!dl.equals(driverLicence))
+				continue;
 			dl.issue();
 			licences.put(dl.getLicenceNumber().toString(), dl);
 			return true;
@@ -125,13 +153,23 @@ public class DriverLicence{
 		return false;
 	}
 
+	/**
+	 * Returns whether terminate operation is success or not.
+	 *
+	 * @return whether terminate operation is success or not.
+	 */
 	public boolean terminateRental() {
 		if (!isRented)
 			return false;
-		isRented = !isRented;
+		isRented = false;
 		return true;
 	}
 
+	/**
+	 * Returns whether terminate operation is success or not.
+	 *
+	 * @return whether terminate operation is success or not.
+	 */
 	public static boolean terminateRental(DriverLicence driverLicence) {
 		final Iterator<DriverLicence> licIter = licences.values().iterator();
 		while (licIter.hasNext()) {
@@ -143,6 +181,9 @@ public class DriverLicence{
 		return false;
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -157,15 +198,37 @@ public class DriverLicence{
 				&& dateOfIssue.equals(lic.dateOfIssue) && isRented == lic.isRented;
 	}
 
+	/**
+	 * Returns a string representation of a driver licence.
+	 *
+	 * @see java.lang.Object#toString()
+	 * @see #valueOf for the string representation of
+	 * a driver licence
+	 */
 	@Override
 	public String toString() {
 		return name + "-" + dateOfBirth.getTime() + "-" + licenceNumber + "-" + dateOfIssue.getTime() + "-" + isRented;
 	}
 
+	/**
+	 * Constructs an instance of DriverLicence from its
+	 * string representation.
+	 *
+	 * @param str string representation of DriverLicence
+	 * @return an instance of DriverLicence from its
+	 * string representation.
+	 * @throws NullPointerException if <code>str</code> is null
+	 * @throws ArrayIndexOutOfBoundsException if there are not
+	 * six component parts to <code>str</code>
+	 */
 	public static DriverLicence valueOf(String str) {
 		final String[] parts = str.split("-");
-		return DriverLicence.getInstance(Name.valueOf(parts[0]), new Date(Long.valueOf(parts[1])),
-				LicenceNumber.valueOf(parts[2]), new Date(Long.valueOf(parts[3])), Boolean.parseBoolean(parts[4]));
+		return new DriverLicence(Name.valueOf(parts[0]), new Date(Long.valueOf(parts[1])),
+				LicenceNumber.valueOf(parts[2]+"-"+parts[3]+"-"+parts[4]), new Date(Long.valueOf(parts[5])), Boolean.parseBoolean(parts[6]));
+	}
+
+	public static void clear() {
+		licences.clear();
 	}
 
 }

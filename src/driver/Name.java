@@ -89,7 +89,7 @@ public final class Name {
 
 		final Name name = (Name) obj;
 
-		return firstName.equals(name.firstName) && lastName.equals(lastName);
+		return firstName.equals(name.firstName) && lastName.equals(name.lastName);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package company;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 import car.Car;
 import car.CarFactory;
-import driver.DriverLicence;
 import driver.DriverLicence;
 
 public class RentalCompany {
@@ -33,7 +32,13 @@ public class RentalCompany {
 	}
 
 	public Collection<Car> getRentedCars() {
-		return Arrays.asList(((Car[])rentedList.keySet().toArray()));
+		Collection<Car> toReturn = new ArrayList<Car>();
+		Iterator<Car> cIter = rentedList.keySet().iterator();
+		while (cIter.hasNext()) {
+			Car car = cIter.next();
+			toReturn.add(car);
+		}
+		return toReturn;
 	}
 
 	public Car getCar(DriverLicence driverLicence) {
@@ -91,25 +96,41 @@ public class RentalCompany {
 
 	public int terminateRental(DriverLicence driverLicence) {
 		final Iterator<Entry<Car, DriverLicence>> eIter = rentedList.entrySet().iterator();
-		boolean find = false;
-		Entry<Car, DriverLicence> entry = eIter.next();
 		while (eIter.hasNext()) {
+			Entry<Car, DriverLicence> entry = eIter.next();
 			DriverLicence dl = entry.getValue();
 			if (dl.equals(driverLicence)) {
-				find = true;
-				break;
+				final Car car = entry.getKey();
+				car.terminateRental();
+				driverLicence.terminateRental();
+				rentedList.put(car, driverLicence);
+				rentedList.remove(car);
+				CarFactory.terminateRental(car);
+				DriverLicence.terminateRental(driverLicence);
+				return car.capacity() - car.fuel();
 			}
-			entry = eIter.next();
 		}
-		if (!find)
-			return 0;
-		final Car car = entry.getKey();
-		car.terminateRental();
-		driverLicence.terminateRental();
-		rentedList.put(car, driverLicence);
-		CarFactory.terminateRental(car);
-		DriverLicence.terminateRental(driverLicence);
+		return -1;
 
-		return car.capacity() - car.fuel();
+	}
+
+	public int drive(Car car, int dist) {
+		final Iterator<Entry<Car, DriverLicence>> rIter = rentedList.entrySet().iterator();
+		int d = 0;
+		while (rIter.hasNext()) {
+			final Entry<Car, DriverLicence> entry = rIter.next();
+			Car c = entry.getKey();
+			if (c.equals(car)) {
+				d = c.drive(dist);
+				rentedList.put(c, entry.getValue());
+			}
+		}
+		return d;
+	}
+
+	public static void clear() {
+		rentedList.clear();
+		CarFactory.clear();
+		DriverLicence.clear();
 	}
 }

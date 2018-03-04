@@ -58,7 +58,17 @@ public interface Car {
 
 	public int drive(int dist);
 
+	/**
+	 * Returns whether issue operation is success or not.
+	 *
+	 * @return whether issue operation is success or not.
+	 */
 	public boolean issue();
 
+	/**
+	 * Returns whether terminate operation is success or not.
+	 *
+	 * @return whether terminate operation is success or not.
+	 */
 	public boolean terminateRental();
 }
