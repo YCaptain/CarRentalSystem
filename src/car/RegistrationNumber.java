@@ -1,11 +1,5 @@
 package car;
 
-/**
- * Registration number - registration number of a car.
- *
- * @author YCaptain
- *
- */
 public final class RegistrationNumber {
 	private char letter;
 	private int num;

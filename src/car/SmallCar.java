@@ -14,10 +14,16 @@ public class SmallCar extends CarFactory {
 		super(regisNum, CAP);
 	}
 
+	/**
+	 * @see CarFactory#CarFactory(String)
+	 */
 	public SmallCar(RegistrationNumber regisNum, int fuel, boolean isRented) {
 		super(regisNum, CAP, fuel, isRented);
 	}
 
+	/**
+	 * @see car.Car#drive()
+	 */
 	@Override
 	public int drive(int dist) {
 		if (dist < 0)

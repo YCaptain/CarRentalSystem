@@ -1,11 +1,5 @@
 package car;
 
-/**
- * Car - interface to cars.
- *
- * @author YCaptain
- *
- */
 public interface Car {
 	/**
 	 * Returns the registration number.
@@ -56,6 +50,11 @@ public interface Car {
 	 */
 	public int refuel(int nfuel);
 
+	/**
+	 * Returns how much fuel was cost by driving a distance.
+	 * @param dist distance to drive
+	 * @return how much fuel was cost by driving a distance.
+	 */
 	public int drive(int dist);
 
 	/**

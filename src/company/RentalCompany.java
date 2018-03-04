@@ -21,16 +21,37 @@ public class RentalCompany {
 	private RentalCompany() {
 	}
 
+	/**
+	 * Returns a rental company by factory which guarantee that only a instance existed.
+	 *
+	 * @return a rental company by factory which guarantee that only a instance existed.
+	 */
 	public static RentalCompany getInstance() {
 		if (company == null)
 			company = new RentalCompany();
 		return company;
 	}
 
+	/**
+	 * Returns the number of cars of the specified type
+	 * that are available to rent.
+	 *
+	 * @param carType car type
+	 * @return the number of cars of the specified type
+	 * that are available to rent.
+	 * @throws IllegalArgumentException if <code>carType</code>
+	 * is a invalid car type.
+	 */
 	public int availableCars(String carType) {
 		return CarFactory.availableCars(carType);
 	}
 
+	/**
+	 * Returns a collection of all the cars currently
+	 * rented out.
+	 * @return a collection of all the cars currently
+	 * rented out.
+	 */
 	public Collection<Car> getRentedCars() {
 		Collection<Car> toReturn = new ArrayList<Car>();
 		Iterator<Car> cIter = rentedList.keySet().iterator();
@@ -41,6 +62,11 @@ public class RentalCompany {
 		return toReturn;
 	}
 
+	/**
+	 * Returns the car by given a person's driving licence.
+	 * @param driverLicence driver's licence.
+	 * @return the car by given a person's driving licence.
+	 */
 	public Car getCar(DriverLicence driverLicence) {
 		final Iterator<Entry<Car, DriverLicence>> eIter = rentedList.entrySet().iterator();
 		while (eIter.hasNext()) {
@@ -51,6 +77,16 @@ public class RentalCompany {
 		return null;
 	}
 
+	/**
+	 * Returns whether the issue operation is success or not.
+	 * Given a person's driving licence and a specification of the
+	 * type of car required, determines whether the person is eligible
+	 * to rent a car of the specified type and issues a car of
+	 * the specified type.
+	 * @param driverLicence driver's licence
+	 * @param carType car type
+	 * @return whether the issue operation is success or not.
+	 */
 	public boolean issueCar(DriverLicence driverLicence, String carType) {
 		final Iterator<DriverLicence> dlIter = rentedList.values().iterator();
 		while (dlIter.hasNext()) {
@@ -94,6 +130,14 @@ public class RentalCompany {
 		return true;
 	}
 
+	/**
+	 * Returns the amount of fuel in Liters required to fill the
+	 * car's tank. Terminates the rental contract associated with
+	 * the given driving licence.
+	 * @param driverLicence driver's licence.
+	 * @return the amount of fuel in Liters required to fill the
+	 * car's tank.
+	 */
 	public int terminateRental(DriverLicence driverLicence) {
 		final Iterator<Entry<Car, DriverLicence>> eIter = rentedList.entrySet().iterator();
 		while (eIter.hasNext()) {
@@ -114,6 +158,29 @@ public class RentalCompany {
 
 	}
 
+	/**
+	 * Returns how much fuel to refuel by given car and amount of fuel.
+	 * @param car car to refuel
+	 * @param nfuel amount of fuel
+	 * @return how much fuel to refuel by given car and amount of fuel.
+	 */
+	public static int refuel(Car car, int nfuel) {
+		final Iterator<Entry<Car, DriverLicence>> rIter = rentedList.entrySet().iterator();
+		int d = 0;
+		while (rIter.hasNext()) {
+			final Entry<Car, DriverLicence> entry = rIter.next();
+			Car c = entry.getKey();
+			if (c.equals(car)) {
+				d = c.refuel(nfuel);
+				rentedList.put(c, entry.getValue());
+			}
+		}
+		return d;
+	}
+
+	/**
+	 * @see car.Car#drive()
+	 */
 	public int drive(Car car, int dist) {
 		final Iterator<Entry<Car, DriverLicence>> rIter = rentedList.entrySet().iterator();
 		int d = 0;
@@ -128,6 +195,9 @@ public class RentalCompany {
 		return d;
 	}
 
+	/**
+	 * Clear records of company, car factory and driver licence.
+	 */
 	public static void clear() {
 		rentedList.clear();
 		CarFactory.clear();

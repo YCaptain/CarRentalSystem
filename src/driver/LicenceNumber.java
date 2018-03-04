@@ -1,11 +1,5 @@
 package driver;
 
-/**
- * LicenceNumber - licence number of a driver.
- *
- * @author YCaptain
- *
- */
 public final class LicenceNumber {
 	private String first;
 	private int second;

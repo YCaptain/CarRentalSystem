@@ -8,15 +8,23 @@ public class LargeCar extends CarFactory{
 	private static final int FUEL_RATE_FIR = 10;
 	private static final int FUEL_RATE_SEC = 15;
 
+	/**
+	 * @see CarFactory#CarFactory(String)
+	 */
 	public LargeCar(RegistrationNumber regisNum) {
 		super(regisNum, CAP);
 	}
 
+	/**
+	 * @see CarFactory#CarFactory(String)
+	 */
 	public LargeCar(RegistrationNumber regisNum, int fuel, boolean isRented) {
 		super(regisNum, CAP, fuel, isRented);
 	}
 
-
+	/**
+	 * @see car.Car#drive()
+	 */
 	@Override
 	public int drive(int dist) {
 		if (dist < 0)

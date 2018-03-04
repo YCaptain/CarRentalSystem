@@ -87,7 +87,9 @@ public class RentalCompanyTest {
 		car = company.getCar(dl1);
 		assertEquals(3, company.drive(car, 30));
 		assertEquals(7, company.drive(car, 66));
-		assertEquals(10, company.terminateRental(dl1));
+		assertEquals(5, RentalCompany.refuel(car, 5));
+		assertEquals(2, company.getRentedCars().size());
+		assertEquals(5, company.terminateRental(dl1));
 		assertEquals(-1, company.terminateRental(dl1));
 		RentalCompany.clear();
 	}

@@ -1,11 +1,5 @@
 package driver;
 
-/**
- * Name - mutable representation of a name.
- *
- * @author YCaptain
- *
- */
 public final class Name {
 	private String firstName;
 	private String lastName;

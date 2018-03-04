@@ -5,12 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * DriverLicence - interface to driver licences.
- *
- * @author YCaptain
- *
- */
 public class DriverLicence{
 	private static final Map<String, DriverLicence> licences = new HashMap<String, DriverLicence>();
 	private final Name name;
@@ -227,6 +221,9 @@ public class DriverLicence{
 				LicenceNumber.valueOf(parts[2]+"-"+parts[3]+"-"+parts[4]), new Date(Long.valueOf(parts[5])), Boolean.parseBoolean(parts[6]));
 	}
 
+	/**
+	 * Clear records
+	 */
 	public static void clear() {
 		licences.clear();
 	}

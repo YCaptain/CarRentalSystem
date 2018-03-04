@@ -4,13 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * CarFactory - factory for cars that also provides abstract implementation of
- * Car (all but drive method). Note that this implements the car.Car interface
- *
- * @author YCaptain
- *
- */
 public abstract class CarFactory implements Car {
 	/**
 	 * Small car type.
@@ -130,6 +123,7 @@ public abstract class CarFactory implements Car {
 			throw new IllegalArgumentException("Negative refuel: " + nfuel);
 		if (fuel == capacity)
 			return 0;
+		setFuel(fuel + nfuel);
 		return nfuel + fuel <= capacity ? nfuel : capacity - fuel;
 	}
 
@@ -241,6 +235,21 @@ public abstract class CarFactory implements Car {
 	}
 
 	/**
+	 * Update car map
+	 * @param car
+	 */
+	void update(Car car) {
+		cars.put(car.regisNum().toString(), car);
+	}
+
+	/**
+	 * clear car map
+	 */
+	public static void clear() {
+		cars.clear();
+	}
+
+	/**
 	 * Returns the number of cars of the specified type that are available to rent.
 	 *
 	 * @param carType
@@ -313,11 +322,4 @@ public abstract class CarFactory implements Car {
 		return null;
 	}
 
-	void update(Car car) {
-		cars.put(car.regisNum().toString(), car);
-	}
-
-	public static void clear() {
-		cars.clear();
-	}
 }
